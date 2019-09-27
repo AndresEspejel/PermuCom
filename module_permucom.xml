@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_permucom" default="compile.module.permucom">
+  <dirname property="module.permucom.basedir" file="${ant.file.module_permucom}"/>
+  
+  <property name="module.jdk.home.permucom" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.permucom" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.permucom" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.permucom" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
+  
+  <property name="permucom.output.dir" value="${module.permucom.basedir}/bin/default"/>
+  <property name="permucom.testoutput.dir" value="${module.permucom.basedir}/bin/default"/>
+  
+  <path id="permucom.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="permucom.module.production.classpath">
+    <path refid="${module.jdk.classpath.permucom}"/>
+  </path>
+  
+  <path id="permucom.runtime.production.module.classpath">
+    <pathelement location="${permucom.output.dir}"/>
+  </path>
+  
+  <path id="permucom.module.classpath">
+    <pathelement location="${permucom.output.dir}"/>
+    <path refid="${module.jdk.classpath.permucom}"/>
+  </path>
+  
+  <path id="permucom.runtime.module.classpath">
+    <pathelement location="${permucom.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.permucom">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.permucom">
+    <patternset refid="excluded.from.module.permucom"/>
+  </patternset>
+  
+  <path id="permucom.module.sourcepath">
+    <dirset dir="${module.permucom.basedir}">
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+      <include name="src/test/java"/>
+      <include name="src/test/resources"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.permucom" depends="compile.module.permucom.production,compile.module.permucom.tests" description="Compile module PermuCom"/>
+  
+  <target name="compile.module.permucom.production" depends="register.custom.compilers" description="Compile module PermuCom; production classes">
+    <mkdir dir="${permucom.output.dir}"/>
+    <javac2 destdir="${permucom.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.permucom}/javac">
+      <compilerarg line="${compiler.args.permucom}"/>
+      <bootclasspath refid="permucom.module.bootclasspath"/>
+      <classpath refid="permucom.module.production.classpath"/>
+      <src refid="permucom.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.permucom"/>
+    </javac2>
+    
+    <copy todir="${permucom.output.dir}">
+      <fileset dir="${module.permucom.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.permucom.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.permucom.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.permucom.basedir}/src/test/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.permucom.tests" depends="register.custom.compilers,compile.module.permucom.production" description="compile module PermuCom; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.permucom" description="cleanup module">
+    <delete dir="${permucom.output.dir}"/>
+    <delete dir="${permucom.testoutput.dir}"/>
+  </target>
+</project>
