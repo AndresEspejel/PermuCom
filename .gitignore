@@ -503,3 +503,13 @@ MigrationBackup/
 .vscode/settings.json
 
 .settings/org.eclipse.buildship.core.prefs
+
+.idea/$PRODUCT_WORKSPACE_FILE$
+
+.idea/codeStyles/Project.xml
+
+.idea/compiler.xml
+
+.idea/google-java-format.xml
+
+.idea/
